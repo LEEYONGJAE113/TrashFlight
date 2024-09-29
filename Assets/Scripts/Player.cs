@@ -1,16 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed;
 
     [SerializeField]
-    private GameObject weapon;
+    private GameObject[] weapons;
+    private int weaponIndex = 0;
 
     [SerializeField]
     private Transform shootTransform;
@@ -23,10 +25,19 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Time.time - lastShotTime > shootInterval)
         {
-            Instantiate(weapon, shootTransform.position, Quaternion.identity);
+            Instantiate(weapons[weaponIndex], shootTransform.position, Quaternion.identity);
             lastShotTime = Time.time;
         }
         
+    }
+
+    public void Upgrade()
+    {
+        weaponIndex++;
+        if (weaponIndex >= weapons.Length)
+        {
+            weaponIndex = weapons.Length - 1;
+        }
     }
     void Update()
     {
@@ -57,10 +68,26 @@ public class PlayerMovement : MonoBehaviour
         transform.position = new Vector3(
             toX, transform.position.y, transform.position.z);
 
-        
-        Shoot();
+        if(GameManager.instance.isGameover == false)
+        {
+            Shoot();
+        }
     }
 
-    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Enemy" || other.gameObject.tag == "Boss")
+        {
+            // Debug.Log("Game Over");
+            GameManager.instance.SetGameOver();
+            Destroy(gameObject);
+        }
+        else if (other.gameObject.tag == "Coin")
+        {
+            Debug.Log("Coin + 1");
+            Destroy(other.gameObject);
+            GameManager.instance.IncreaseCoin();
+        }
+    }
 
 }
