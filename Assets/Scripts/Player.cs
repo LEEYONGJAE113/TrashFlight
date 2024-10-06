@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
 {
     [SerializeField]
     private float moveSpeed;
@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
             Instantiate(weapon, shootTransform.position, Quaternion.identity);
             lastShotTime = Time.time;
         }
-        
+
     }
     void Update()
     {
@@ -47,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
         // {
         //     transform.position += moveTo;
         // }
-        
+
         // Debug.Log(Input.mousePosition);
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -57,10 +57,10 @@ public class PlayerMovement : MonoBehaviour
         transform.position = new Vector3(
             toX, transform.position.y, transform.position.z);
 
-        
+
         Shoot();
     }
 
-    
+
 
 }
